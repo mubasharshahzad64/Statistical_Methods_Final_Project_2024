@@ -27,17 +27,18 @@ The age of an abalone can be estimated as `Rings + 1.5`.
 
 ## Prerequisites
 
-Before running the script, ensure you have the following installed:
+Before running the script, the following installed:
 - Python 3.7+
 - pandas
 - scikit-learn
 - joblib
 
-You can install the necessary packages using pip:
+install the necessary packages using pip:
 ```sh
 pip install pandas scikit-learn joblib
-Installation
-Download the Dataset:
+```
+## Installation
+# Download the Dataset:
 
 Download the abalone.csv file from the UCI Machine Learning Repository.
 Place the CSV File:
@@ -99,7 +100,7 @@ Splitting the Data:
 The data is split into training and testing sets.
 Training the Model:
 
-A linear regression model is trained using the training data.
+## A linear regression model is trained using the training data.
 Evaluating the Model:
 
 The model's performance is evaluated using mean squared error and R^2 score.
