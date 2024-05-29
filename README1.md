@@ -66,7 +66,7 @@ print(df.columns)
 print(df.head())
 ```
 # Step 2: Preprocessing
-# Convert categorical variable 'Sex' into numerical values using one-hot encoding
+## Convert categorical variable 'Sex' into numerical values using one-hot encoding
 ```
 df = pd.get_dummies(df, columns=['Sex'], drop_first=True)
 ```
@@ -75,7 +75,7 @@ df = pd.get_dummies(df, columns=['Sex'], drop_first=True)
 df['Age'] = df['Rings'] + 1.5
 df.drop(columns=['Rings'], inplace=True)
 ```
-# step 3: Exploratory Data Analysis (EDA)
+## step 3: Exploratory Data Analysis (EDA)
 ```
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -89,18 +89,18 @@ corr = df.corr()
 sns.heatmap(corr, annot=True, cmap='coolwarm')
 plt.show()
 ```
-# Step 3: Split the data into training and testing sets
+## Step 4: Split the data into training and testing sets
 ```
 X = df.drop(columns=['Age'])
 y = df['Age']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 ```
-# Step 4: Train a Linear Regression model
+## Step 5: Train a Linear Regression model
 ```
 model = LinearRegression()
 model.fit(X_train, y_train)
 ```
-# Step 5: Evaluate the model
+## Step 6: Evaluate the model
 ```
 y_pred = model.predict(X_test)
 mse = mean_squared_error(y_test, y_pred)
@@ -109,10 +109,4 @@ r2 = r2_score(y_test, y_pred)
 print(f'Mean Squared Error: {mse}')
 print(f'R^2 Score: {r2}')
 ```
-# Optionally, save the trained model for future use
-joblib.dump(model, 'abalone_age_predictor.pkl')
-Running the Script
-python abalone_age_prediction.py
-Understanding the Script
-
 
