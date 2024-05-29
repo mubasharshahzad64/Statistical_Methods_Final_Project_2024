@@ -70,7 +70,7 @@ print(df.head())
 ```
 df = pd.get_dummies(df, columns=['Sex'], drop_first=True)
 ```
-# Adjust target variable 'Rings' to get the actual age
+## Adjust target variable 'Rings' to get the actual age
 ```
 df['Age'] = df['Rings'] + 1.5
 df.drop(columns=['Rings'], inplace=True)
