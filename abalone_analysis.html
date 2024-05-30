@@ -1,42 +1,294 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Abalone Age Prediction - Model Training and Evaluation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-        }
-        h1, h2, h3 {
-            color: #333;
-        }
-        pre {
-            background: #f4f4f4;
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
-    </style>
-</head>
-<body>
-    <h1>Abalone Age Prediction - Model Training and Evaluation</h1>
+# Abalone Age Prediction
 
-    <h2>Step 6: Model Training</h2>
-    <h3>Choose a Model</h3>
-    <p>Select a regression model (e.g., Linear Regression, Decision Tree, Random Forest, etc.).</p>
+This project aims to predict the age of abalones based on their physical measurements using a linear regression model. The dataset used contains various physical measurements of abalones, and the goal is to predict the number of rings, which can be used to estimate their age.
 
-    <h3>Train the Model</h3>
-    <p>Train the selected model on the training data.</p>
+## Table of Contents
+- [Dataset Information](#dataset-information)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Running the Script](#running-the-script)
+- [Understanding the Script](#understanding-the-script)
+- [Troubleshooting](#troubleshooting)
 
-    <h3>Evaluate the Model</h3>
-    <p>Evaluate the model's performance on the test data using appropriate metrics.</p>
+## Dataset Information
 
-    <h2>Python Script for Model Training and Evaluation</h2>
-    <pre><code>import pandas as pd
-from sklearn.model_selection import train_test_split, GridSearchCV
+The dataset contains 4,177 instances of abalones and 8 features. The features include:
+- Sex: Categorical (M, F, I)
+- Length: Continuous (mm)
+- Diameter: Continuous (mm)
+- Height: Continuous (mm)
+- Whole_weight: Continuous (grams)
+- Shucked_weight: Continuous (grams)
+- Viscera_weight: Continuous (grams)
+- Shell_weight: Continuous (grams)
+- Rings: Integer (target variable)
+
+The age of an abalone can be estimated as `Rings + 1.5`.
+## Step 1: Understanding the Data
+1. First, let's summarize the dataset and its features:
+2. Categorical Feature: Sex (M, F, I)
+3. Continuous Features: Length, Diameter, Height, Whole_weight, Shucked_weight, Viscera_weight, Shell_weight
+4. Target Variable: Rings (which, when adjusted, gives the age)
+
+## Step 2: Preparing the Environment
+
+Python installed.
+Libraries: pandas, numpy, scikit-learn, matplotlib, and seaborn.
+```
+pip install pandas numpy scikit-learn matplotlib seaborn
+
+```
+
+# Step 3: Load the dataset
+Place the CSV file (abalone.csv) in the same directory as my Python script
+Import pandas:
+pandas is a powerful library for data manipulation and analysis.
+```
+Read the CSV file:
+
+# Load the dataset into a DataFrame
+
+df = pd.read_csv('abalone.csv')
+
+Inspect the Data
+
+# Display the first few rows
+print(df.head())
+```
+ Verify the Column Names
+Ensure that the column names match the ones described in the dataset information. Sometimes, the first row might be treated as header incorrectly if the file format is not as expected.
+Load the CSV file into a pandas DataFrame:
+```
+import pandas as pd
+# Load the dataset
+df = pd.read_csv('abalone.csv')
+# Display the first few rows to ensure it loaded correctly
+print(df.head())
+# Optionally, inspect the column names and data types
+print(df.columns)
+print(df.dtypes)
+```
+
+# Step 4: Python script
+Python script that covers loading the dataset, preprocessing, and training a linear regression model to predict the age of abalones based on their physical measurements.
+```
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Step 1: Load the dataset
+df = pd.read_csv('abalone.csv')
+
+# Step 2: Preprocessing
+# Convert categorical variable 'Sex' into numerical values using one-hot encoding
+df = pd.get_dummies(df, columns=['Sex'], drop_first=True)
+
+# Adjust target variable 'Rings' to get the actual age
+df['Age'] = df['Rings'] + 1.5
+df.drop(columns=['Rings'], inplace=True)
+
+# Step 3: Split the data into training and testing sets
+X = df.drop(columns=['Age'])
+y = df['Age']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 4: Train a Linear Regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Step 5: Evaluate the model
+y_pred = model.predict(X_test)
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f'Mean Squared Error: {mse}')
+print(f'R^2 Score: {r2}')
+
+# Optionally, save the trained model for future use
+import joblib
+joblib.dump(model, 'abalone_age_predictor.pkl')
+```
+Run the script using the Python interpreter
+```
+python abalone_age_prediction.py
+```
+##  Results
+```
+   Sex  Length  Diameter  Height  Whole_weight  Shucked_weight  Viscera_weight  Shell_weight  Rings
+0    M   0.455     0.365   0.095        0.5140          0.2245          0.1010         0.150     15
+1    M   0.350     0.265   0.090        0.2255          0.0995          0.0485         0.070      7
+2    F   0.530     0.420   0.135        0.6770          0.2565          0.1415         0.210      9
+3    M   0.440     0.365   0.125        0.5160          0.2155          0.1140         0.155     10
+4    I   0.330     0.255   0.080        0.2050          0.0895          0.0395         0.055      7
+```
+## Step 5: Data Preprocessing
+Convert the Sex Column to Numerical Values:
+Use one-hot encoding to convert the categorical `Sex` column into numerical columns.
+
+Adjust the Target Variable:
+The `Rings` column needs to be adjusted to get the actual age.
+# Complete Script with Adjustments
+
+```
+import pandas as pd
+
+# Define column names
+column_names = ['Sex', 'Length', 'Diameter', 'Height', 'Whole_weight', 'Shucked_weight', 'Viscera_weight', 'Shell_weight', 'Rings']
+
+# Load the dataset with the correct column names
+df = pd.read_csv('abalone.csv', names=column_names)
+
+# Display the first few rows to ensure it loaded correctly
+print("Initial DataFrame with Correct Column Names:")
+print(df.head())
+
+# Perform one-hot encoding on the 'Sex' column
+df = pd.get_dummies(df, columns=['Sex'], drop_first=True)
+
+# Convert boolean columns to integers
+df['Sex_I'] = df['Sex_I'].astype(int)
+df['Sex_M'] = df['Sex_M'].astype(int)
+
+# Display the first few rows to ensure the conversion
+print("\nDataFrame with Sex Columns as Integers:")
+print(df.head())
+
+# Adjust the target variable to get the actual age
+df['Age'] = df['Rings'] + 1.5
+
+# Drop the original 'Rings' column
+df.drop(columns=['Rings'], inplace=True)
+
+# Display the first few rows after adding the Age column
+print("\nDataFrame with Age Column:")
+print(df.head())
+```
+## Output
+Load the dataset with proper headers, perform one-hot encoding on the `Sex` column, convert the boolean columns to integers, adjust the target variable to `Age`, and display the transformed DataFrame.
+```
+Initial DataFrame with Correct Column Names:
+  Sex  Length  Diameter  Height  Whole_weight  Shucked_weight  Viscera_weight  Shell_weight  Rings
+0   M   0.455     0.365   0.095        0.5140          0.2245          0.1010         0.150     15
+1   M   0.350     0.265   0.090        0.2255          0.0995          0.0485         0.070      7
+2   F   0.530     0.420   0.135        0.6770          0.2565          0.1415         0.210      9
+3   M   0.440     0.365   0.125        0.5160          0.2155          0.1140         0.155     10
+4   I   0.330     0.255   0.080        0.2050          0.0895          0.0395         0.055      7
+
+DataFrame after One-Hot Encoding:
+   Length  Diameter  Height  Whole_weight  Shucked_weight  Viscera_weight  Shell_weight  Rings  Sex_I  Sex_M
+0   0.455     0.365   0.095        0.5140          0.2245          0.1010         0.150     15  False   True
+1   0.350     0.265   0.090        0.2255          0.0995          0.0485         0.070      7  False   True
+2   0.530     0.420   0.135        0.6770          0.2565          0.1415         0.210      9  False  False
+3   0.440     0.365   0.125        0.5160          0.2155          0.1140         0.155     10  False   True
+4   0.330     0.255   0.080        0.2050          0.0895          0.0395         0.055      7   True  False
+
+DataFrame with Sex Columns as Integers:
+   Length  Diameter  Height  Whole_weight  Shucked_weight  Viscera_weight  Shell_weight  Rings  Sex_I  Sex_M
+0   0.455     0.365   0.095        0.5140          0.2245          0.1010         0.150     15      0      1
+1   0.350     0.265   0.090        0.2255          0.0995          0.0485         0.070      7      0      1
+2   0.530     0.420   0.135        0.6770          0.2565          0.1415         0.210      9      0      0
+3   0.440     0.365   0.125        0.5160          0.2155          0.1140         0.155     10      0      1
+4   0.330     0.255   0.080        0.2050          0.0895          0.0395         0.055      7      1      0
+
+DataFrame with Age Column:
+   Length  Diameter  Height  Whole_weight  Shucked_weight  Viscera_weight  Shell_weight  Sex_I  Sex_M   Age
+0   0.455     0.365   0.095        0.5140          0.2245          0.1010         0.150      0      1  16.5
+1   0.350     0.265   0.090        0.2255          0.0995          0.0485         0.070      0      1   8.5
+2   0.530     0.420   0.135        0.6770          0.2565          0.1415         0.210      0      0  10.5
+3   0.440     0.365   0.125        0.5160          0.2155          0.1140         0.155      0      1  11.5
+4   0.330     0.255   0.080        0.2050          0.0895          0.0395         0.055      1      0   8.5
+```
+# Step 6: Exploratory Data Analysis (EDA)
+Xploratory Data Analysis (EDA) is a critical step in the data analysis process, helping to understand the data's structure, patterns, and relationships.
+```
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+column_names = ['Sex', 'Length', 'Diameter', 'Height', 'Whole_weight', 'Shucked_weight', 'Viscera_weight', 'Shell_weight', 'Rings']
+df = pd.read_csv('abalone.csv', names=column_names)
+
+# Convert 'Sex' column to numerical values using one-hot encoding
+df = pd.get_dummies(df, columns=['Sex'], drop_first=True)
+
+# Convert boolean columns to integers
+df['Sex_I'] = df['Sex_I'].astype(int)
+df['Sex_M'] = df['Sex_M'].astype(int)
+
+# Adjust the target variable to get the actual age
+df['Age'] = df['Rings'] + 1.5
+df.drop(columns=['Rings'], inplace=True)
+
+# EDA: Visualize Data Distribution
+# Distribution of Age
+plt.figure(figsize=(10, 6))
+sns.histplot(df['Age'], bins=20, kde=True)
+plt.title('Distribution of Age')
+plt.xlabel('Age')
+plt.ylabel('Frequency')
+plt.show()
+
+# Boxplot for numerical features
+plt.figure(figsize=(14, 8))
+df.boxplot()
+plt.xticks(rotation=45)
+plt.title('Boxplot of Numerical Features')
+plt.show()
+
+# Correlation Matrix
+plt.figure(figsize=(12, 8))
+corr_matrix = df.corr()
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt='.2f')
+plt.title('Correlation Matrix')
+plt.show()
+
+# Pairplot to visualize relationships between features
+sns.pairplot(df)
+plt.show()
+
+# Analysis of individual features
+# Distribution of Length
+plt.figure(figsize=(10, 6))
+sns.histplot(df['Length'], bins=20, kde=True)
+plt.title('Distribution of Length')
+plt.xlabel('Length')
+plt.ylabel('Frequency')
+plt.show()
+
+# Distribution of Diameter
+plt.figure(figsize=(10, 6))
+sns.histplot(df['Diameter'], bins=20, kde=True)
+plt.title('Distribution of Diameter')
+plt.xlabel('Diameter')
+plt.ylabel('Frequency')
+plt.show()
+
+# Relationship between Length and Age
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=df['Length'], y=df['Age'])
+plt.title('Length vs Age')
+plt.xlabel('Length')
+plt.ylabel('Age')
+plt.show()
+
+# Relationship between Whole_weight and Age
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=df['Whole_weight'], y=df['Age'])
+plt.title('Whole Weight vs Age')
+plt.xlabel('Whole Weight')
+plt.ylabel('Age')
+plt.show()
+```
+## Step 6: Choose Linear Regression Model
+proceed with model training using a linear regression model.
+```
+import pandas as pd
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.metrics import mean_squared_error, r2_score
 
 # Load the dataset
 column_names = ['Sex', 'Length', 'Diameter', 'Height', 'Whole_weight', 'Shucked_weight', 'Viscera_weight', 'Shell_weight', 'Rings']
@@ -64,61 +316,27 @@ X_scaled = scaler.fit_transform(X)
 # Train-Test Split
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
-# Define hyperparameters for grid search
-param_grid = {'fit_intercept': [True, False]}
-
-# Initialize linear regression model
+# Initialize the linear regression model
 model = LinearRegression()
 
-# Perform grid search with cross-validation
-grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5, scoring='neg_mean_squared_error', verbose=1)
-grid_search.fit(X_train, y_train)
+# Train the model on the training data
+model.fit(X_train, y_train)
 
-# Get best parameters and best estimator
-best_params = grid_search.best_params_
-best_model = grid_search.best_estimator_
+# Make predictions on the test data
+y_pred = model.predict(X_test)
 
-# Make predictions using the best model
-y_pred_best = best_model.predict(X_test)
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
 
-# Evaluate the best model
-mse_best = mean_squared_error(y_test, y_pred_best)
-mae = mean_absolute_error(y_test, y_pred_best)
-r2_best = r2_score(y_test, y_pred_best)
+print("Mean Squared Error (MSE):", mse)
+print("R-squared (R2) Score:", r2)
+```
+# Result
+```
+Mean Squared Error (MSE): 4.8912
+R-squared (R2) Score: 0.5482
+```
+A lower MSE indicates better predictive accuracy, while a higher R-squared score indicates a better fit of the model to the data.
 
-print("Best Model Evaluation Metrics:")
-print("Mean Squared Error (MSE):", mse_best)
-print("Mean Absolute Error (MAE):", mae)
-print("R-squared (R2) Score:", r2_best)
-print("Best Hyperparameters:", best_params)
-</code></pre>
 
-    <h2>Model Evaluation and Improvement</h2>
-    <p>Evaluate Model Performance:</p>
-    <p>Use metrics such as Mean Absolute Error (MAE), Mean Squared Error (MSE), or R-squared to evaluate the model.</p>
-
-    <p>Hyperparameter Tuning:</p>
-    <p>Optimize the model by tuning hyperparameters using techniques like Grid Search or Random Search.</p>
-
-    <h3>Results:</h3>
-    <ul>
-        <li>Mean Squared Error (MSE): 4.891232447128581</li>
-        <li>Mean Absolute Error (MAE): 1.6589133893886718</li>
-        <li>R-squared (R2) Score: 0.5481628137889262</li>
-        <li>Best Hyperparameters: {'fit_intercept': True}</li>
-    </ul>
-
-    <p>The above script performs the following steps:</p>
-    <ol>
-        <li>Loads the dataset.</li>
-        <li>Converts categorical variables to numerical values using one-hot encoding.</li>
-        <li>Scales the features using StandardScaler.</li>
-        <li>Splits the data into training and testing sets.</li>
-        <li>Defines hyperparameters for grid search.</li>
-        <li>Initializes and trains a linear regression model using GridSearchCV for hyperparameter tuning.</li>
-        <li>Evaluates the model using MSE, MAE, and R2 score metrics.</li>
-    </ol>
-
-    <p>Feel free to modify and improve this script according to your specific requirements.</p>
-</body>
-</html>
