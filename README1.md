@@ -114,9 +114,11 @@ Run the script using the Python interpreter
 python abalone_age_prediction.py
 ```
 ##  Results
+```
    Sex  Length  Diameter  Height  Whole_weight  Shucked_weight  Viscera_weight  Shell_weight  Rings
 0    M   0.455     0.365   0.095        0.5140          0.2245          0.1010         0.150     15
 1    M   0.350     0.265   0.090        0.2255          0.0995          0.0485         0.070      7
 2    F   0.530     0.420   0.135        0.6770          0.2565          0.1415         0.210      9
 3    M   0.440     0.365   0.125        0.5160          0.2155          0.1140         0.155     10
 4    I   0.330     0.255   0.080        0.2050          0.0895          0.0395         0.055      7
+```
