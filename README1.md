@@ -24,6 +24,11 @@ The dataset contains 4,177 instances of abalones and 8 features. The features in
 - Rings: Integer (target variable)
 
 The age of an abalone can be estimated as `Rings + 1.5`.
+## Step 1: Understanding the Data
+First, let's summarize the dataset and its features:
+Categorical Feature: Sex (M, F, I)
+Continuous Features: Length, Diameter, Height, Whole_weight, Shucked_weight, Viscera_weight, Shell_weight
+Target Variable: Rings (which, when adjusted, gives the age)
 
 ## Prerequisites
 
