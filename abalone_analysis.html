@@ -2,41 +2,156 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Abalone Age Prediction - Model Training and Evaluation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abalone Age Prediction</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
+            margin: 0;
+            padding: 0 20px;
         }
         h1, h2, h3 {
             color: #333;
         }
         pre {
-            background: #f4f4f4;
+            background-color: #f4f4f4;
             padding: 10px;
             border: 1px solid #ddd;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
         }
     </style>
 </head>
 <body>
-    <h1>Abalone Age Prediction - Model Training and Evaluation</h1>
 
-    <h2>Step 6: Model Training</h2>
-    <h3>Choose a Model</h3>
-    <p>Select a regression model (e.g., Linear Regression, Decision Tree, Random Forest, etc.).</p>
+<h1>Abalone Age Prediction</h1>
 
-    <h3>Train the Model</h3>
-    <p>Train the selected model on the training data.</p>
+<p>This project aims to predict the age of abalones based on their physical measurements using a linear regression model. The dataset used contains various physical measurements of abalones, and the goal is to predict the number of rings, which can be used to estimate their age.</p>
 
-    <h3>Evaluate the Model</h3>
-    <p>Evaluate the model's performance on the test data using appropriate metrics.</p>
+<h2>Table of Contents</h2>
+<ul>
+    <li><a href="#dataset-information">Dataset Information</a></li>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#running-the-script">Running the Script</a></li>
+    <li><a href="#understanding-the-script">Understanding the Script</a></li>
+    <li><a href="#troubleshooting">Troubleshooting</a></li>
+</ul>
 
-    <h2>Python Script for Model Training and Evaluation</h2>
-    <pre><code>import pandas as pd
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.preprocessing import StandardScaler
+<h2 id="dataset-information">Dataset Information</h2>
+<p>The dataset contains 4,177 instances of abalones and 8 features. The features include:</p>
+<ul>
+    <li>Sex: Categorical (M, F, I)</li>
+    <li>Length: Continuous (mm)</li>
+    <li>Diameter: Continuous (mm)</li>
+    <li>Height: Continuous (mm)</li>
+    <li>Whole_weight: Continuous (grams)</li>
+    <li>Shucked_weight: Continuous (grams)</li>
+    <li>Viscera_weight: Continuous (grams)</li>
+    <li>Shell_weight: Continuous (grams)</li>
+    <li>Rings: Integer (target variable)</li>
+</ul>
+<p>The age of an abalone can be estimated as <code>Rings + 1.5</code>.</p>
+
+<h2 id="step-1-understanding-the-data">Step 1: Understanding the Data</h2>
+<ol>
+    <li>First, let's summarize the dataset and its features:</li>
+    <li>Categorical Feature: Sex (M, F, I)</li>
+    <li>Continuous Features: Length, Diameter, Height, Whole_weight, Shucked_weight, Viscera_weight, Shell_weight</li>
+    <li>Target Variable: Rings (which, when adjusted, gives the age)</li>
+</ol>
+
+<h2 id="step-2-preparing-the-environment">Step 2: Preparing the Environment</h2>
+<p>Python installed. Libraries: pandas, numpy, scikit-learn, matplotlib, and seaborn.</p>
+<pre><code>pip install pandas numpy scikit-learn matplotlib seaborn</code></pre>
+
+<h2 id="step-3-load-the-dataset">Step 3: Load the dataset</h2>
+<p>Place the CSV file (abalone.csv) in the same directory as the Python script. Import pandas: pandas is a powerful library for data manipulation and analysis.</p>
+<pre><code>Read the CSV file:
+
+# Load the dataset into a DataFrame
+
+df = pd.read_csv('abalone.csv')
+
+Inspect the Data
+
+# Display the first few rows
+print(df.head())
+</code></pre>
+<p>Verify the Column Names. Ensure that the column names match the ones described in the dataset information.</p>
+
+<h2 id="step-4-preprocessing">Step 4: Preprocessing</h2>
+<p>Let's preprocess the data, converting categorical variables into numerical ones, handling missing values, and scaling the features.</p>
+<pre><code>from sklearn.preprocessing import StandardScaler
+
+# Convert 'Sex' column to numerical values using one-hot encoding
+df = pd.get_dummies(df, columns=['Sex'], drop_first=True)
+
+# Convert boolean columns to integers
+df['Sex_I'] = df['Sex_I'].astype(int)
+df['Sex_M'] = df['Sex_M'].astype(int)
+
+# Adjust the target variable to get the actual age
+df['Age'] = df['Rings'] + 1.5
+df.drop(columns=['Rings'], inplace=True)
+
+# Separate features and target variable
+X = df.drop(columns=['Age'])  # Features
+y = df['Age']  # Target variable
+
+# Feature Scaling
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+</code></pre>
+
+<h2 id="step-5-data-visualization">Step 5: Data Visualization</h2>
+<p>Visualize the data to understand the relationships between different features and the target variable.</p>
+<pre><code>import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Pairplot
+sns.pairplot(df)
+plt.show()
+
+# Correlation heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
+plt.show()
+
+# Scatter plot example
+plt.scatter(df['Whole_weight'], df['Age'])
+plt.title('Whole Weight vs Age')
+plt.xlabel('Whole Weight')
+plt.ylabel('Age')
+plt.show()
+</code></pre>
+
+<h2 id="step-6-choose-linear-regression-model">Step 6: Choose Linear Regression Model</h2>
+<p>Proceed with model training using a linear regression model.</p>
+<pre><code>import pandas as pd
+from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.metrics import mean_squared_error, r2_score
 
 # Load the dataset
 column_names = ['Sex', 'Length', 'Diameter', 'Height', 'Whole_weight', 'Shucked_weight', 'Viscera_weight', 'Shell_weight', 'Rings']
@@ -64,61 +179,44 @@ X_scaled = scaler.fit_transform(X)
 # Train-Test Split
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
-# Define hyperparameters for grid search
-param_grid = {'fit_intercept': [True, False]}
-
-# Initialize linear regression model
+# Initialize the linear regression model
 model = LinearRegression()
 
-# Perform grid search with cross-validation
-grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5, scoring='neg_mean_squared_error', verbose=1)
-grid_search.fit(X_train, y_train)
+# Train the model on the training data
+model.fit(X_train, y_train)
 
-# Get best parameters and best estimator
-best_params = grid_search.best_params_
-best_model = grid_search.best_estimator_
+# Make predictions on the test data
+y_pred = model.predict(X_test)
 
-# Make predictions using the best model
-y_pred_best = best_model.predict(X_test)
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
 
-# Evaluate the best model
-mse_best = mean_squared_error(y_test, y_pred_best)
-mae = mean_absolute_error(y_test, y_pred_best)
-r2_best = r2_score(y_test, y_pred_best)
-
-print("Best Model Evaluation Metrics:")
-print("Mean Squared Error (MSE):", mse_best)
-print("Mean Absolute Error (MAE):", mae)
-print("R-squared (R2) Score:", r2_best)
-print("Best Hyperparameters:", best_params)
+print("Mean Squared Error (MSE):", mse)
+print("R-squared (R2) Score:", r2)
 </code></pre>
 
-    <h2>Model Evaluation and Improvement</h2>
-    <p>Evaluate Model Performance:</p>
-    <p>Use metrics such as Mean Absolute Error (MAE), Mean Squared Error (MSE), or R-squared to evaluate the model.</p>
+<h2 id="result">Result</h2>
+<pre><code>Mean Squared Error (MSE): 4.8912
+R-squared (R2) Score: 0.5482
+</code></pre>
+<p>A lower MSE indicates better predictive accuracy, while a higher R-squared score indicates a better fit of the model to the data.</p>
 
-    <p>Hyperparameter Tuning:</p>
-    <p>Optimize the model by tuning hyperparameters using techniques like Grid Search or Random Search.</p>
+<h2 id="results-table">Results Table</h2>
+<table>
+    <tr>
+        <th>Metric</th>
+        <th>Value</th>
+    </tr>
+    <tr>
+        <td>Mean Squared Error (MSE)</td>
+        <td>4.8912</td>
+    </tr>
+    <tr>
+        <td>R-squared (R2) Score</td>
+        <td>0.5482</td>
+    </tr>
+</table>
 
-    <h3>Results:</h3>
-    <ul>
-        <li>Mean Squared Error (MSE): 4.891232447128581</li>
-        <li>Mean Absolute Error (MAE): 1.6589133893886718</li>
-        <li>R-squared (R2) Score: 0.5481628137889262</li>
-        <li>Best Hyperparameters: {'fit_intercept': True}</li>
-    </ul>
-
-    <p>The above script performs the following steps:</p>
-    <ol>
-        <li>Loads the dataset.</li>
-        <li>Converts categorical variables to numerical values using one-hot encoding.</li>
-        <li>Scales the features using StandardScaler.</li>
-        <li>Splits the data into training and testing sets.</li>
-        <li>Defines hyperparameters for grid search.</li>
-        <li>Initializes and trains a linear regression model using GridSearchCV for hyperparameter tuning.</li>
-        <li>Evaluates the model using MSE, MAE, and R2 score metrics.</li>
-    </ol>
-
-    <p>Feel free to modify and improve this script according to your specific requirements.</p>
 </body>
 </html>
