@@ -1,95 +1,3 @@
-<<<<<<< HEAD
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abalone Age Prediction</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0 20px;
-        }
-        h1, h2, h3 {
-            color: #333;
-        }
-        pre {
-            background-color: #f4f4f4;
-            padding: 10px;
-            border: 1px solid #ddd;
-            overflow-x: auto;
-        }
-        code {
-            background-color: #f4f4f4;
-            padding: 2px 4px;
-            border-radius: 4px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f4f4f4;
-        }
-    </style>
-</head>
-<body>
-
-<h1>Abalone Age Prediction</h1>
-
-<p>This project aims to predict the age of abalones based on their physical measurements using a linear regression model. The dataset used contains various physical measurements of abalones, and the goal is to predict the number of rings, which can be used to estimate their age.</p>
-
-<h2>Table of Contents</h2>
-<ul>
-    <li><a href="#dataset-information">Dataset Information</a></li>
-    <li><a href="#prerequisites">Prerequisites</a></li>
-    <li><a href="#installation">Installation</a></li>
-    <li><a href="#running-the-script">Running the Script</a></li>
-    <li><a href="#understanding-the-script">Understanding the Script</a></li>
-    <li><a href="#troubleshooting">Troubleshooting</a></li>
-</ul>
-
-<h2 id="dataset-information">Dataset Information</h2>
-<p>The dataset contains 4,177 instances of abalones and 8 features. The features include:</p>
-<ul>
-    <li>Sex: Categorical (M, F, I)</li>
-    <li>Length: Continuous (mm)</li>
-    <li>Diameter: Continuous (mm)</li>
-    <li>Height: Continuous (mm)</li>
-    <li>Whole_weight: Continuous (grams)</li>
-    <li>Shucked_weight: Continuous (grams)</li>
-    <li>Viscera_weight: Continuous (grams)</li>
-    <li>Shell_weight: Continuous (grams)</li>
-    <li>Rings: Integer (target variable)</li>
-</ul>
-<p>The age of an abalone can be estimated as <code>Rings + 1.5</code>.</p>
-
-<h2 id="step-1-understanding-the-data">Step 1: Understanding the Data</h2>
-<ol>
-    <li>First, let's summarize the dataset and its features:</li>
-    <li>Categorical Feature: Sex (M, F, I)</li>
-    <li>Continuous Features: Length, Diameter, Height, Whole_weight, Shucked_weight, Viscera_weight, Shell_weight</li>
-    <li>Target Variable: Rings (which, when adjusted, gives the age)</li>
-</ol>
-
-<h2 id="step-2-preparing-the-environment">Step 2: Preparing the Environment</h2>
-<p>Python installed. Libraries: pandas, numpy, scikit-learn, matplotlib, and seaborn.</p>
-<pre><code>pip install pandas numpy scikit-learn matplotlib seaborn</code></pre>
-
-<h2 id="step-3-load-the-dataset">Step 3: Load the dataset</h2>
-<p>Place the CSV file (abalone.csv) in the same directory as the Python script. Import pandas: pandas is a powerful library for data manipulation and analysis.</p>
-<pre><code>Read the CSV file:
-=======
 # Abalone Age Prediction
 
 This project aims to predict the age of abalones based on their physical measurements using a linear regression model. The dataset used contains various physical measurements of abalones, and the goal is to predict the number of rings, which can be used to estimate their age.
@@ -137,7 +45,6 @@ Import pandas:
 pandas is a powerful library for data manipulation and analysis.
 ```
 Read the CSV file:
->>>>>>> af0d4535f73526a9b930e32a42576b866cd07210
 
 # Load the dataset into a DataFrame
 
@@ -147,14 +54,6 @@ Inspect the Data
 
 # Display the first few rows
 print(df.head())
-<<<<<<< HEAD
-</code></pre>
-<p>Verify the Column Names. Ensure that the column names match the ones described in the dataset information.</p>
-
-<h2 id="step-4-preprocessing">Step 4: Preprocessing</h2>
-<p>Let's preprocess the data, converting categorical variables into numerical ones, handling missing values, and scaling the features.</p>
-<pre><code>from sklearn.preprocessing import StandardScaler
-=======
 ```
  Verify the Column Names
 Ensure that the column names match the ones described in the dataset information. Sometimes, the first row might be treated as header incorrectly if the file format is not as expected.
@@ -310,7 +209,6 @@ import seaborn as sns
 # Load the dataset
 column_names = ['Sex', 'Length', 'Diameter', 'Height', 'Whole_weight', 'Shucked_weight', 'Viscera_weight', 'Shell_weight', 'Rings']
 df = pd.read_csv('abalone.csv', names=column_names)
->>>>>>> af0d4535f73526a9b930e32a42576b866cd07210
 
 # Convert 'Sex' column to numerical values using one-hot encoding
 df = pd.get_dummies(df, columns=['Sex'], drop_first=True)
@@ -323,33 +221,6 @@ df['Sex_M'] = df['Sex_M'].astype(int)
 df['Age'] = df['Rings'] + 1.5
 df.drop(columns=['Rings'], inplace=True)
 
-<<<<<<< HEAD
-# Separate features and target variable
-X = df.drop(columns=['Age'])  # Features
-y = df['Age']  # Target variable
-
-# Feature Scaling
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-</code></pre>
-
-<h2 id="step-5-data-visualization">Step 5: Data Visualization</h2>
-<p>Visualize the data to understand the relationships between different features and the target variable.</p>
-<pre><code>import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Pairplot
-sns.pairplot(df)
-plt.show()
-
-# Correlation heatmap
-plt.figure(figsize=(10, 8))
-sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
-plt.show()
-
-# Scatter plot example
-plt.scatter(df['Whole_weight'], df['Age'])
-=======
 # EDA: Visualize Data Distribution
 # Distribution of Age
 plt.figure(figsize=(10, 6))
@@ -405,19 +276,10 @@ plt.show()
 # Relationship between Whole_weight and Age
 plt.figure(figsize=(10, 6))
 sns.scatterplot(x=df['Whole_weight'], y=df['Age'])
->>>>>>> af0d4535f73526a9b930e32a42576b866cd07210
 plt.title('Whole Weight vs Age')
 plt.xlabel('Whole Weight')
 plt.ylabel('Age')
 plt.show()
-<<<<<<< HEAD
-</code></pre>
-
-<h2 id="step-6-choose-linear-regression-model">Step 6: Choose Linear Regression Model</h2>
-<p>Proceed with model training using a linear regression model.</p>
-<pre><code>import pandas as pd
-from sklearn.model_selection import train_test_split
-=======
 ```
 ## Step 6: Choose Linear Regression Model
 proceed with model training using a linear regression model.
@@ -425,7 +287,6 @@ proceed with model training using a linear regression model.
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
->>>>>>> af0d4535f73526a9b930e32a42576b866cd07210
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 
@@ -470,34 +331,6 @@ r2 = r2_score(y_test, y_pred)
 
 print("Mean Squared Error (MSE):", mse)
 print("R-squared (R2) Score:", r2)
-<<<<<<< HEAD
-</code></pre>
-
-<h2 id="result">Result</h2>
-<pre><code>Mean Squared Error (MSE): 4.8912
-R-squared (R2) Score: 0.5482
-</code></pre>
-<p>A lower MSE indicates better predictive accuracy, while a higher R-squared score indicates a better fit of the model to the data.</p>
-
-<h2 id="results-table">Results Table</h2>
-<table>
-    <tr>
-        <th>Metric</th>
-        <th>Value</th>
-    </tr>
-    <tr>
-        <td>Mean Squared Error (MSE)</td>
-        <td>4.8912</td>
-    </tr>
-    <tr>
-        <td>R-squared (R2) Score</td>
-        <td>0.5482</td>
-    </tr>
-</table>
-
-</body>
-</html>
-=======
 ```
 # Result
 ```
@@ -507,4 +340,4 @@ R-squared (R2) Score: 0.5482
 A lower MSE indicates better predictive accuracy, while a higher R-squared score indicates a better fit of the model to the data.
 
 
->>>>>>> af0d4535f73526a9b930e32a42576b866cd07210
+
