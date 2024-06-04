@@ -46,10 +46,20 @@ for name, model in models.items():
     y_pred = model.predict(X_test)
     mse = mean_squared_error(y_test, y_pred)
     r2 = r2_score(y_test, y_pred)
-    results[name] = {'MSE': mse, 'R2': r2}
+    residuals = y_test - y_pred
+    results[name] = {
+        'MSE': mse,
+        'R2': r2,
+        'Residuals': residuals
+    }
 
 # Print the results
 for name, metrics in results.items():
     print(f"{name}:")
     print(f"Mean Squared Error (MSE): {metrics['MSE']}")
     print(f"R-squared (R2) Score: {metrics['R2']}\n")
+    print("First 10 Residuals:")
+    print(metrics['Residuals'].head(10))
+    print("\nResiduals Summary Statistics:")
+    print(metrics['Residuals'].describe())
+    print("\n")

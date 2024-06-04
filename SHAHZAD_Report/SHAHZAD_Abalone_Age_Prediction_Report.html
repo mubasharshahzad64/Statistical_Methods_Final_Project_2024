@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicting the Age of Abalone Using Regression Models</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        header, footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        footer {
+            border-radius: 0 0 10px 10px;
+        }
+        main {
+            padding: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #3498db;
+        }
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #2980b9;
+            color: #ecf0f1;
+        }
+        figure {
+            margin: 20px 0;
+            text-align: center;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        figcaption {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        code {
+            background-color: #ecf0f1;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        pre {
+            background-color: #ecf0f1;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+        ol {
+            padding-left: 20px;
+        }
+        .highlight {
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .warning {
+            background-color: #fcf8e3;
+            color: #8a6d3b;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1 style="color: #ffffff;">Predicting the Age of Abalone Using Regression Models</h1>
+
+        <p><strong>Author:</strong> Muhammad Mubashar Shahzad, University of Trieste</p>
+        <p><strong>Date:</strong> <span id="date"></span></p>
+    </header>
+
+    <main>
+        <section id="abstract">
+            <h2>Abstract</h2>
+            <p>This report presents a comprehensive analysis of predicting the age of abalone using linear, ridge, and lasso regression models. The study includes data preprocessing, exploratory data analysis, model training, evaluation, comparison, and residuals analysis. Visualizations and statistical summaries are provided to support the findings.</p>
+        </section>
+
+        <section id="toc">
+            <h2>Table of Contents</h2>
+            <ol>
+                <li><a href="#introduction">Introduction</a></li>
+                <li><a href="#dataset-overview">Dataset Overview</a></li>
+                <li><a href="#data-loading-and-preprocessing">Data Loading and Preprocessing</a></li>
+                <li><a href="#exploratory-data-analysis">Exploratory Data Analysis</a></li>
+                <li><a href="#feature-scaling-and-train-test-split">Feature Scaling and Train-Test Split</a></li>
+                <li><a href="#model-training-and-evaluation">Model Training and Evaluation</a></li>
+                <li><a href="#results-and-model-comparison">Results and Model Comparison</a></li>
+                <li><a href="#residuals-analysis">Residuals Analysis</a></li>
+                <li><a href="#conclusion">Conclusion</a></li>
+                <li><a href="#acknowledgements">Acknowledgements</a></li>
+            </ol>
+        </section>
+
+        <section id="introduction">
+            <h2>Introduction</h2>
+            <p>Predicting the age of abalone is crucial for marine biologists and the seafood industry. This study aims to develop regression models to predict abalone age using physical measurements and compare their performance.</p>
+        </section>
+
+        <section id="dataset-overview">
+            <h2>Dataset Overview</h2>
+            <p>The Abalone dataset from the UCI Machine Learning Repository includes 4177 instances and 8 features. The target variable is the number of rings, which can be used to estimate the age.</p>
+
+            <h3>Data Description</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Sex</td>
+                        <td>M, F, and I (infant)</td>
+                    </tr>
+                    <tr>
+                        <td>Length</td>
+                        <td>Longest shell measurement (mm)</td>
+                    </tr>
+                    <tr>
+                        <td>Diameter</td>
+                        <td>Perpendicular to length (mm)</td>
+                    </tr>
+                    <tr>
+                        <td>Height</td>
+                        <td>With meat in shell (mm)</td>
+                    </tr>
+                    <tr>
+                        <td>Whole weight</td>
+                        <td>Whole abalone (g)</td>
+                    </tr>
+                    <tr>
+                        <td>Shucked weight</td>
+                        <td>Weight of meat (g)</td>
+                    </tr>
+                    <tr>
+                        <td>Viscera weight</td>
+                        <td>Gut weight (after bleeding) (g)</td>
+                    </tr>
+                    <tr>
+                        <td>Shell weight</td>
+                        <td>After being dried (g)</td>
+                    </tr>
+                    <tr>
+                        <td>Rings</td>
+                        <td>+1.5 gives the age in years</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="data-loading-and-preprocessing">
+            <h2>Data Loading and Preprocessing</h2>
+            <h3>Loading the Data</h3>
+            <pre><code>
+import pandas as pd
+
+df = pd.read_csv('abalone.csv')
+df.columns = ['Sex', 'Length', 'Diameter', 'Height', 'Whole_weight', 'Shucked_weight', 'Viscera_weight', 'Shell_weight', 'Rings']
+            </code></pre>
+
+            <h3>Data Preprocessing</h3>
+            <pre><code>
+df = pd.get_dummies(df, columns=['Sex'], drop_first=True)
+df['Age'] = df['Rings'] + 1.5
+df.drop(columns=['Rings'], inplace=True)
+            </code></pre>
+        </section>
+
+        <section id="exploratory-data-analysis">
+            <h2>Exploratory Data Analysis</h2>
+            <h3>Graphical Representation</h3>
+            <figure>
+                <img src="Boxplot of numerical features.png" alt="Boxplot of numerical features">
+                <figcaption>Boxplot of numerical features</figcaption>
+            </figure>
+
+            <figure>
+                <img src="Distribution of age.png" alt="Distribution of age">
+                
+            </figure>
+
+            <figure>
+                <img src="Distribution of diameter.png" alt="Distribution of diameter">
+                
+            </figure>
+
+            <figure>
+                <img src="Distribution of length.png" alt="Distribution of length">
+                
+            </figure>
+
+            <figure>
+                <img src="Length vs Age.png" alt="Length vs Age">
+                
+            </figure>
+
+            <h3>Correlation Matrix</h3>
+            <figure>
+                <img src="Correlation Matrix.png" alt="Correlation Matrix.png">
+               
+            </figure>
+        </section>
+
+        <section id="feature-scaling-and-train-test-split">
+            <h2>Feature Scaling and Train-Test Split</h2>
+            <pre><code>
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+
+scaler = StandardScaler()
+X = df.drop(columns=['Age'])
+y = df['Age']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+            </code></pre>
+        </section>
+
+        <section id="model-training-and-evaluation">
+            <h2>Model Training and Evaluation</h2>
+
+            <h3>Linear Regression</h3>
+            <pre><code>
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+lr_model = LinearRegression()
+lr_model.fit(X_train_scaled, y_train)
+y_pred_lr = lr_model.predict(X_test_scaled)
+mse_lr = mean_squared_error(y_test, y_pred_lr)
+r2_lr = r2_score(y_test, y_pred_lr)
+residuals_lr = y_test - y_pred_lr
+
+print(f"Linear Regression\nMSE: {mse_lr}\nR²: {r2_lr}")
+            </code></pre>
+
+            <h3>Lasso Regression</h3>
+            <pre><code>
+from sklearn.linear_model import Lasso
+
+lasso_model = Lasso()
+lasso_model.fit(X_train_scaled, y_train)
+y_pred_lasso = lasso_model.predict(X_test_scaled)
+mse_lasso = mean_squared_error(y_test, y_pred_lasso)
+r2_lasso = r2_score(y_test, y_pred_lasso)
+residuals_lasso = y_test - y_pred_lasso
+
+print(f"Lasso Regression\nMSE: {mse_lasso}\nR²: {r2_lasso}")
+            </code></pre>
+
+            <h3>Ridge Regression</h3>
+            <pre><code>
+from sklearn.linear_model import Ridge
+
+ridge_model = Ridge()
+ridge_model.fit(X_train_scaled, y_train)
+y_pred_ridge = ridge_model.predict(X_test_scaled)
+mse_ridge = mean_squared_error(y_test, y_pred_ridge)
+r2_ridge = r2_score(y_test, y_pred_ridge)
+residuals_ridge = y_test - y_pred_ridge
+
+print(f"Ridge Regression\nMSE: {mse_ridge}\nR²: {r2_ridge}")
+            </code></pre>
+        </section>
+
+        <section id="results-and-model-comparison">
+            <h2>Results and Model Comparison</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>MSE</th>
+                        <th>R²</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Linear Regression</td>
+                        <td>4.8912</td>
+                        <td>0.5482</td>
+                    </tr>
+                    <tr>
+                        <td>Lasso Regression</td>
+                        <td>7.6826</td>
+                        <td>0.2903</td>
+                    </tr>
+                    <tr>
+                        <td>Ridge Regression</td>
+                        <td>4.8911</td>
+                        <td>0.5482</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="residuals-analysis">
+            <h2>Residuals Analysis</h2>
+
+            <h3>Comparison of Residuals</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>First 10 Residuals</th>
+                        <th>Mean</th>
+                        <th>Std</th>
+                        <th>Min</th>
+                        <th>25%</th>
+                        <th>50%</</th>
+                        <th>75%</th>
+                        <th>Max</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Linear Regression</td>
+                        <td>-2.76, -2.24, 1.99, -2.99, 2.83, 0.76, -2.41, -3.14, -0.19, -0.80</td>
+                        <td>-0.009</td>
+                        <td>2.21</td>
+                        <td>-6.01</td>
+                        <td>-1.38</td>
+                        <td>-0.35</td>
+                        <td>0.82</td>
+                        <td>9.78</td>
+                    </tr>
+                    <tr>
+                        <td>Lasso Regression</td>
+                        <td>-1.56, -1.98, 5.36, -1.96, 4.23, 1.45, -2.58, -3.44, -1.64, -0.26</td>
+                        <td>-0.023</td>
+                        <td>2.77</td>
+                        <td>-5.24</td>
+                        <td>-1.74</td>
+                        <td>-0.65</td>
+                        <td>0.84</td>
+                        <td>12.18</td>
+                    </tr>
+                    <tr>
+                        <td>Ridge Regression</td>
+                        <td>-2.76, -2.25, 2.02, -2.99, 2.84, 0.77, -2.42, -3.13, -0.18, -0.80</td>
+                        <td>-0.008</td>
+                        <td>2.21</td>
+                        <td>-6.02</td>
+                        <td>-1.38</td>
+                        <td>-0.35</td>
+                        <td>0.83</td>
+                        <td>9.77</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <figure>
+            <img src="residual for ridge.png" alt="Boxplot of numerical features">
+        </figure>
+
+        <figure>
+            <img src="residual destribution for lasso regression.png" alt="Boxplot of numerical features">
+        </figure>
+
+        <figure>
+            <img src="Residual vs predicted values for ridge.png" alt="Boxplot of numerical features">
+            
+        </figure>
+
+        <figure>
+            <img src="residual vs predicted value for lasso.png" alt="Boxplot of numerical features">
+        </figure>
+
+        <figure>
+            <img src="q-q plot of residual.png" alt="Boxplot of numerical features">
+        </figure>
+
+        <figure>
+            <img src="q-q lasso.png" alt="Boxplot of numerical features">
+        </figure>
+        
+        <style>
+            .justify-align {
+                text-align: justify;
+            }
+        </style>
+        <section id="conclusion" class="justify-align">
+            <h2>Conclusion</h2>
+            <p>Based on the Mean Squared Error (MSE) and R² values, Linear Regression and Ridge Regression performed similarly and significantly better than Lasso Regression. Ridge Regression is slightly preferred due to its ability to handle multicollinearity without compromising performance. It achieved the lowest MSE and a high R² value, indicating a good fit and predictive capability.</p>
+            <p>Residuals analysis revealed that both Linear and Ridge models had similar patterns of residuals, indicating that the models captured the underlying patterns of the data well. However, there were some outliers with high residual values, suggesting that the models might be underestimating or overestimating the age of some abalones. Lasso Regression showed higher variability in residuals, which might indicate that it did not generalize as well to the test data.</p>
+            <p>In future work, exploring advanced regression techniques and feature engineering may yield further improvements in model performance. Additionally, considering a Generalized Linear Model (GLM) could provide a more flexible approach to handle different distributions of the target variable and potentially improve prediction accuracy.</p>
+        </section>
+
+        <section id="acknowledgements">
+            <h2>Acknowledgements</h2>
+            <p>Thanks to the UCI Machine Learning Repository for providing the Abalone dataset and to the readers of this report.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Muhammad Mubashar Shahzad, University of Trieste</p>
+    </footer>
+</div>
+
+<script>
+    document.getElementById('date').textContent = new Date().toLocaleDateString();
+</script>
+
+</body>
+</html>

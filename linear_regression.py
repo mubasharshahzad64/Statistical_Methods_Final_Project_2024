@@ -3,6 +3,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+import seaborn as sns
+import scipy.stats as stats
 
 # Load the dataset
 column_names = ['Sex', 'Length', 'Diameter', 'Height', 'Whole_weight', 'Shucked_weight', 'Viscera_weight', 'Shell_weight', 'Rings']
@@ -46,3 +49,37 @@ r2 = r2_score(y_test, y_pred)
 print("Linear Regression")
 print("Mean Squared Error (MSE):", mse)
 print("R-squared (R2) Score:", r2)
+
+# Calculate residuals
+residuals = y_test - y_pred
+
+# Print first few residuals
+print("\nFirst 10 Residuals:")
+print(residuals.head(10))
+
+# Print summary statistics of residuals
+print("\nResiduals Summary Statistics:")
+print(residuals.describe())
+
+# Plot residuals
+plt.figure(figsize=(10, 6))
+sns.histplot(residuals, bins=20, kde=True)
+plt.title('Distribution of Residuals')
+plt.xlabel('Residual')
+plt.ylabel('Frequency')
+plt.show()
+
+# Scatter plot of residuals
+plt.figure(figsize=(10, 6))
+plt.scatter(y_pred, residuals)
+plt.axhline(y=0, color='r', linestyle='--')
+plt.title('Residuals vs Predicted Values')
+plt.xlabel('Predicted Values')
+plt.ylabel('Residuals')
+plt.show()
+
+# Q-Q plot to check normality of residuals
+plt.figure(figsize=(10, 6))
+stats.probplot(residuals, dist="norm", plot=plt)
+plt.title('Q-Q Plot of Residuals')
+plt.show()
