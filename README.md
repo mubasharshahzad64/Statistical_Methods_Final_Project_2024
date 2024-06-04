@@ -43,21 +43,7 @@ pip install pandas numpy scikit-learn matplotlib seaborn
 Place the CSV file (abalone.csv) in the same directory as my Python script
 Import pandas:
 pandas is a powerful library for data manipulation and analysis.
-```
-Read the CSV file:
 
-# Load the dataset into a DataFrame
-
-df = pd.read_csv('abalone.csv')
-
-Inspect the Data
-
-# Display the first few rows
-print(df.head())
-```
- Verify the Column Names
-Ensure that the column names match the ones described in the dataset information. Sometimes, the first row might be treated as header incorrectly if the file format is not as expected.
-Load the CSV file into a pandas DataFrame:
 ```
 import pandas as pd
 # Load the dataset
