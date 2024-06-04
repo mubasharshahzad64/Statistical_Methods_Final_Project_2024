@@ -154,7 +154,7 @@ Based on the Mean Squared Error (MSE) and R² values, Linear Regression and Ridg
 
 Residuals analysis revealed that both Linear and Ridge models had similar patterns of residuals, indicating that the models captured the underlying patterns of the data well. However, there were some outliers with high residual values, suggesting that the models might be underestimating or overestimating the age of some abalones. Lasso Regression showed higher variability in residuals, which might indicate that it did not generalize as well to the test data.
 
-In future work, exploring advanced regression techniques and feature engineering may yield further improvements in model performance.
+In future work, exploring advanced regression techniques and feature engineering may yield further improvements in model performance. Additionally, considering a *Generalized Linear Model (GLM)* could provide a more flexible approach to handle different distributions of the target variable and potentially improve prediction accuracy.
 
 ### Acknowledgements
 Thanks to the UCI Machine Learning Repository for providing the Abalone dataset and to the readers of this report.
