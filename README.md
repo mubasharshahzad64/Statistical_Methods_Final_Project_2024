@@ -160,9 +160,8 @@ In future work, exploring advanced regression techniques and feature engineering
 Thanks to the UCI Machine Learning Repository for providing the Abalone dataset and to the readers of this report.
 
 ### Author
-Muhammad Mubashar Shahzad, University of Trieste
 
-© 2024 Muhammad Mubashar Shahzad, University of
+© 2024 Muhammad Mubashar Shahzad, University of Trieste
 
 
 
