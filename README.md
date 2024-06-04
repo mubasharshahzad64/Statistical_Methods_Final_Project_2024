@@ -1,343 +1,172 @@
 # Abalone Age Prediction
 
-This project aims to predict the age of abalones based on their physical measurements using a linear regression model. The dataset used contains various physical measurements of abalones, and the goal is to predict the number of rings, which can be used to estimate their age.
+This project aims to predict the age of abalones using physical measurements through various regression models. The dataset used for this analysis is the Abalone dataset from the UCI Machine Learning Repository.
 
-## Table of Contents
-- [Dataset Information](#dataset-information)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Running the Script](#running-the-script)
-- [Understanding the Script](#understanding-the-script)
-- [Troubleshooting](#troubleshooting)
+## Dataset Characteristics
+- **Type**: Tabular
+- **Subject Area**: Biology
+- **Associated Tasks**: Classification, Regression
+- **Feature Type**: Categorical, Integer, Real
+- **Instances**: 4177
+- **Features**: 8
 
 ## Dataset Information
+The age of abalones is determined by counting the number of rings in their shells. This dataset includes physical measurements that can be used to predict age, which is a tedious and time-consuming task if done manually.
 
-The dataset contains 4,177 instances of abalones and 8 features. The features include:
-- Sex: Categorical (M, F, I)
-- Length: Continuous (mm)
-- Diameter: Continuous (mm)
-- Height: Continuous (mm)
-- Whole_weight: Continuous (grams)
-- Shucked_weight: Continuous (grams)
-- Viscera_weight: Continuous (grams)
-- Shell_weight: Continuous (grams)
-- Rings: Integer (target variable)
+### Features
+- **Sex**: Categorical (M, F, I)
+- **Length**: Continuous (mm) - Longest shell measurement
+- **Diameter**: Continuous (mm) - Perpendicular to length
+- **Height**: Continuous (mm) - With meat in shell
+- **Whole_weight**: Continuous (grams) - Whole abalone
+- **Shucked_weight**: Continuous (grams) - Weight of meat
+- **Viscera_weight**: Continuous (grams) - Gut weight (after bleeding)
+- **Shell_weight**: Continuous (grams) - After being dried
+- **Rings**: Integer - Number of rings (+1.5 gives the age in years)
 
-The age of an abalone can be estimated as `Rings + 1.5`.
-## Step 1: Understanding the Data
-1. First, let's summarize the dataset and its features:
-2. Categorical Feature: Sex (M, F, I)
-3. Continuous Features: Length, Diameter, Height, Whole_weight, Shucked_weight, Viscera_weight, Shell_weight
-4. Target Variable: Rings (which, when adjusted, gives the age)
+### Missing Values
+There are no missing values in the dataset.
 
-## Step 2: Preparing the Environment
+## Project Overview
+The goal of this project is to build regression models to predict the age of abalones using the provided physical measurements and to compare their performance. The models used include:
+- Linear Regression
+- Ridge Regression
+- Lasso Regression
 
-Python installed.
-Libraries: pandas, numpy, scikit-learn, matplotlib, and seaborn.
-```
-pip install pandas numpy scikit-learn matplotlib seaborn
+### Steps
+1. **Data Loading and Preprocessing**
+   - Load the data and preprocess it by encoding categorical variables and scaling continuous variables.
+   - Add a new column for age by adding 1.5 to the rings.
 
-```
+2. **Exploratory Data Analysis (EDA)**
+   - Perform graphical and statistical analyses to understand data distributions and relationships.
 
-# Step 3: Load the dataset
-Place the CSV file (abalone.csv) in the same directory as my Python script
-Import pandas:
-pandas is a powerful library for data manipulation and analysis.
-```
-Read the CSV file:
+3. **Feature Scaling and Train-Test Split**
+   - Scale the features and split the dataset into training and testing sets.
 
-# Load the dataset into a DataFrame
+4. **Model Training and Evaluation**
+   - Train Linear Regression, Ridge Regression, and Lasso Regression models.
+   - Evaluate models using Mean Squared Error (MSE) and R² metrics.
 
-df = pd.read_csv('abalone.csv')
+5. **Results and Model Comparison**
+   - Compare the models based on their performance metrics.
 
-Inspect the Data
+6. **Residuals Analysis**
+   - Analyze residuals to check for patterns and model accuracy.
 
-# Display the first few rows
-print(df.head())
-```
- Verify the Column Names
-Ensure that the column names match the ones described in the dataset information. Sometimes, the first row might be treated as header incorrectly if the file format is not as expected.
-Load the CSV file into a pandas DataFrame:
-```
+7. **Conclusion**
+   - Summarize the findings and suggest improvements.
+
+## Results
+### Model Performance
+- **Linear Regression**
+  - MSE: 4.8912
+  - R²: 0.5482
+
+- **Ridge Regression**
+  - MSE: 4.8911
+  - R²: 0.5482
+
+- **Lasso Regression**
+  - MSE: 7.6826
+  - R²: 0.2903
+
+### Residuals Analysis
+#### Comparison of Residuals
+| Model               | First 10 Residuals                      | Mean    | Std   | Min   | 25%   | 50%   | 75%   | Max   |
+|---------------------|-----------------------------------------|---------|-------|-------|-------|-------|-------|-------|
+| Linear Regression   | -2.76, -2.24, 1.99, -2.99, 2.83, 0.76, -2.41, -3.14, -0.19, -0.80 | -0.009 | 2.21  | -6.01 | -1.38 | -0.35 | 0.82  | 9.78  |
+| Lasso Regression    | -1.56, -1.98, 5.36, -1.96, 4.23, 1.45, -2.58, -3.44, -1.64, -0.26 | -0.023 | 2.77  | -5.24 | -1.74 | -0.65 | 0.84  | 12.18 |
+| Ridge Regression    | -2.76, -2.25, 2.02, -2.99, 2.84, 0.77, -2.42, -3.13, -0.18, -0.80 | -0.008 | 2.21  | -6.02 | -1.38 | -0.35 | 0.83  | 9.77  |
+
+## Python Scripts
+
+### Data Loading and Preprocessing
+```python
 import pandas as pd
+
 # Load the dataset
 df = pd.read_csv('abalone.csv')
-# Display the first few rows to ensure it loaded correctly
-print(df.head())
-# Optionally, inspect the column names and data types
-print(df.columns)
-print(df.dtypes)
-```
+df.columns = ['Sex', 'Length', 'Diameter', 'Height', 'Whole_weight', 'Shucked_weight', 'Viscera_weight', 'Shell_weight', 'Rings']
 
-# Step 4: Python script
-Python script that covers loading the dataset, preprocessing, and training a linear regression model to predict the age of abalones based on their physical measurements.
-```
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
-
-# Step 1: Load the dataset
-df = pd.read_csv('abalone.csv')
-
-# Step 2: Preprocessing
-# Convert categorical variable 'Sex' into numerical values using one-hot encoding
+# Preprocess the data
 df = pd.get_dummies(df, columns=['Sex'], drop_first=True)
-
-# Adjust target variable 'Rings' to get the actual age
 df['Age'] = df['Rings'] + 1.5
 df.drop(columns=['Rings'], inplace=True)
+```
+### Feature Scaling and Train-Test Split
+```
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 
-# Step 3: Split the data into training and testing sets
+# Scale features and split dataset
+scaler = StandardScaler()
 X = df.drop(columns=['Age'])
 y = df['Age']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Step 4: Train a Linear Regression model
-model = LinearRegression()
-model.fit(X_train, y_train)
-
-# Step 5: Evaluate the model
-y_pred = model.predict(X_test)
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-
-print(f'Mean Squared Error: {mse}')
-print(f'R^2 Score: {r2}')
-
-# Optionally, save the trained model for future use
-import joblib
-joblib.dump(model, 'abalone_age_predictor.pkl')
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
 ```
-Run the script using the Python interpreter
+### Linear Regression
 ```
-python abalone_age_prediction.py
+from sklearn.linear_model import Ridge
+
+# Train and evaluate Ridge Regression model
+ridge_model = Ridge()
+ridge_model.fit(X_train_scaled, y_train)
+y_pred_ridge = ridge_model.predict(X_test_scaled)
+mse_ridge = mean_squared_error(y_test, y_pred_ridge)
+r2_ridge = r2_score(y_test, y_pred_ridge)
+residuals_ridge = y_test - y_pred_ridge
+
+print(f"Ridge Regression\nMSE: {mse_ridge}\nR²: {r2_ridge}")
 ```
-##  Results
+### Ridge Regression 
 ```
-   Sex  Length  Diameter  Height  Whole_weight  Shucked_weight  Viscera_weight  Shell_weight  Rings
-0    M   0.455     0.365   0.095        0.5140          0.2245          0.1010         0.150     15
-1    M   0.350     0.265   0.090        0.2255          0.0995          0.0485         0.070      7
-2    F   0.530     0.420   0.135        0.6770          0.2565          0.1415         0.210      9
-3    M   0.440     0.365   0.125        0.5160          0.2155          0.1140         0.155     10
-4    I   0.330     0.255   0.080        0.2050          0.0895          0.0395         0.055      7
+from sklearn.linear_model import Ridge
+
+# Train and evaluate Ridge Regression model
+ridge_model = Ridge()
+ridge_model.fit(X_train_scaled, y_train)
+y_pred_ridge = ridge_model.predict(X_test_scaled)
+mse_ridge = mean_squared_error(y_test, y_pred_ridge)
+r2_ridge = r2_score(y_test, y_pred_ridge)
+residuals_ridge = y_test - y_pred_ridge
+
+print(f"Ridge Regression\nMSE: {mse_ridge}\nR²: {r2_ridge}")
 ```
-## Step 5: Data Preprocessing
-Convert the Sex Column to Numerical Values:
-Use one-hot encoding to convert the categorical `Sex` column into numerical columns.
-
-Adjust the Target Variable:
-The `Rings` column needs to be adjusted to get the actual age.
-# Complete Script with Adjustments
-
+### Lasso Regression 
 ```
-import pandas as pd
+from sklearn.linear_model import Lasso
 
-# Define column names
-column_names = ['Sex', 'Length', 'Diameter', 'Height', 'Whole_weight', 'Shucked_weight', 'Viscera_weight', 'Shell_weight', 'Rings']
+# Train and evaluate Lasso Regression model
+lasso_model = Lasso()
+lasso_model.fit(X_train_scaled, y_train)
+y_pred_lasso = lasso_model.predict(X_test_scaled)
+mse_lasso = mean_squared_error(y_test, y_pred_lasso)
+r2_lasso = r2_score(y_test, y_pred_lasso)
+residuals_lasso = y_test - y_pred_lasso
 
-# Load the dataset with the correct column names
-df = pd.read_csv('abalone.csv', names=column_names)
-
-# Display the first few rows to ensure it loaded correctly
-print("Initial DataFrame with Correct Column Names:")
-print(df.head())
-
-# Perform one-hot encoding on the 'Sex' column
-df = pd.get_dummies(df, columns=['Sex'], drop_first=True)
-
-# Convert boolean columns to integers
-df['Sex_I'] = df['Sex_I'].astype(int)
-df['Sex_M'] = df['Sex_M'].astype(int)
-
-# Display the first few rows to ensure the conversion
-print("\nDataFrame with Sex Columns as Integers:")
-print(df.head())
-
-# Adjust the target variable to get the actual age
-df['Age'] = df['Rings'] + 1.5
-
-# Drop the original 'Rings' column
-df.drop(columns=['Rings'], inplace=True)
-
-# Display the first few rows after adding the Age column
-print("\nDataFrame with Age Column:")
-print(df.head())
+print(f"Lasso Regression\nMSE: {mse_lasso}\nR²: {r2_lasso}")
 ```
-## Output
-Load the dataset with proper headers, perform one-hot encoding on the `Sex` column, convert the boolean columns to integers, adjust the target variable to `Age`, and display the transformed DataFrame.
-```
-Initial DataFrame with Correct Column Names:
-  Sex  Length  Diameter  Height  Whole_weight  Shucked_weight  Viscera_weight  Shell_weight  Rings
-0   M   0.455     0.365   0.095        0.5140          0.2245          0.1010         0.150     15
-1   M   0.350     0.265   0.090        0.2255          0.0995          0.0485         0.070      7
-2   F   0.530     0.420   0.135        0.6770          0.2565          0.1415         0.210      9
-3   M   0.440     0.365   0.125        0.5160          0.2155          0.1140         0.155     10
-4   I   0.330     0.255   0.080        0.2050          0.0895          0.0395         0.055      7
+### Conclussion 
+Based on the Mean Squared Error (MSE) and R² values, Linear Regression and Ridge Regression performed similarly and significantly better than Lasso Regression. Ridge Regression is slightly preferred due to its ability to handle multicollinearity without compromising performance. It achieved the lowest MSE and a high R² value, indicating a good fit and predictive capability.
 
-DataFrame after One-Hot Encoding:
-   Length  Diameter  Height  Whole_weight  Shucked_weight  Viscera_weight  Shell_weight  Rings  Sex_I  Sex_M
-0   0.455     0.365   0.095        0.5140          0.2245          0.1010         0.150     15  False   True
-1   0.350     0.265   0.090        0.2255          0.0995          0.0485         0.070      7  False   True
-2   0.530     0.420   0.135        0.6770          0.2565          0.1415         0.210      9  False  False
-3   0.440     0.365   0.125        0.5160          0.2155          0.1140         0.155     10  False   True
-4   0.330     0.255   0.080        0.2050          0.0895          0.0395         0.055      7   True  False
+Residuals analysis revealed that both Linear and Ridge models had similar patterns of residuals, indicating that the models captured the underlying patterns of the data well. However, there were some outliers with high residual values, suggesting that the models might be underestimating or overestimating the age of some abalones. Lasso Regression showed higher variability in residuals, which might indicate that it did not generalize as well to the test data.
 
-DataFrame with Sex Columns as Integers:
-   Length  Diameter  Height  Whole_weight  Shucked_weight  Viscera_weight  Shell_weight  Rings  Sex_I  Sex_M
-0   0.455     0.365   0.095        0.5140          0.2245          0.1010         0.150     15      0      1
-1   0.350     0.265   0.090        0.2255          0.0995          0.0485         0.070      7      0      1
-2   0.530     0.420   0.135        0.6770          0.2565          0.1415         0.210      9      0      0
-3   0.440     0.365   0.125        0.5160          0.2155          0.1140         0.155     10      0      1
-4   0.330     0.255   0.080        0.2050          0.0895          0.0395         0.055      7      1      0
+In future work, exploring advanced regression techniques and feature engineering may yield further improvements in model performance. Additionally, considering a *Generalized Linear Model (GLM)* could provide a more flexible approach to handle different distributions of the target variable and potentially improve prediction accuracy.
 
-DataFrame with Age Column:
-   Length  Diameter  Height  Whole_weight  Shucked_weight  Viscera_weight  Shell_weight  Sex_I  Sex_M   Age
-0   0.455     0.365   0.095        0.5140          0.2245          0.1010         0.150      0      1  16.5
-1   0.350     0.265   0.090        0.2255          0.0995          0.0485         0.070      0      1   8.5
-2   0.530     0.420   0.135        0.6770          0.2565          0.1415         0.210      0      0  10.5
-3   0.440     0.365   0.125        0.5160          0.2155          0.1140         0.155      0      1  11.5
-4   0.330     0.255   0.080        0.2050          0.0895          0.0395         0.055      1      0   8.5
-```
-# Step 6: Exploratory Data Analysis (EDA)
-Xploratory Data Analysis (EDA) is a critical step in the data analysis process, helping to understand the data's structure, patterns, and relationships.
-```
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+### Acknowledgements
+Thanks to the UCI Machine Learning Repository for providing the Abalone dataset and to the readers of this report.
 
-# Load the dataset
-column_names = ['Sex', 'Length', 'Diameter', 'Height', 'Whole_weight', 'Shucked_weight', 'Viscera_weight', 'Shell_weight', 'Rings']
-df = pd.read_csv('abalone.csv', names=column_names)
+### Author
 
-# Convert 'Sex' column to numerical values using one-hot encoding
-df = pd.get_dummies(df, columns=['Sex'], drop_first=True)
+© 2024 Muhammad Mubashar Shahzad, University of Trieste
 
-# Convert boolean columns to integers
-df['Sex_I'] = df['Sex_I'].astype(int)
-df['Sex_M'] = df['Sex_M'].astype(int)
 
-# Adjust the target variable to get the actual age
-df['Age'] = df['Rings'] + 1.5
-df.drop(columns=['Rings'], inplace=True)
 
-# EDA: Visualize Data Distribution
-# Distribution of Age
-plt.figure(figsize=(10, 6))
-sns.histplot(df['Age'], bins=20, kde=True)
-plt.title('Distribution of Age')
-plt.xlabel('Age')
-plt.ylabel('Frequency')
-plt.show()
 
-# Boxplot for numerical features
-plt.figure(figsize=(14, 8))
-df.boxplot()
-plt.xticks(rotation=45)
-plt.title('Boxplot of Numerical Features')
-plt.show()
 
-# Correlation Matrix
-plt.figure(figsize=(12, 8))
-corr_matrix = df.corr()
-sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt='.2f')
-plt.title('Correlation Matrix')
-plt.show()
-
-# Pairplot to visualize relationships between features
-sns.pairplot(df)
-plt.show()
-
-# Analysis of individual features
-# Distribution of Length
-plt.figure(figsize=(10, 6))
-sns.histplot(df['Length'], bins=20, kde=True)
-plt.title('Distribution of Length')
-plt.xlabel('Length')
-plt.ylabel('Frequency')
-plt.show()
-
-# Distribution of Diameter
-plt.figure(figsize=(10, 6))
-sns.histplot(df['Diameter'], bins=20, kde=True)
-plt.title('Distribution of Diameter')
-plt.xlabel('Diameter')
-plt.ylabel('Frequency')
-plt.show()
-
-# Relationship between Length and Age
-plt.figure(figsize=(10, 6))
-sns.scatterplot(x=df['Length'], y=df['Age'])
-plt.title('Length vs Age')
-plt.xlabel('Length')
-plt.ylabel('Age')
-plt.show()
-
-# Relationship between Whole_weight and Age
-plt.figure(figsize=(10, 6))
-sns.scatterplot(x=df['Whole_weight'], y=df['Age'])
-plt.title('Whole Weight vs Age')
-plt.xlabel('Whole Weight')
-plt.ylabel('Age')
-plt.show()
-```
-## Step 6: Choose Linear Regression Model
-proceed with model training using a linear regression model.
-```
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
-
-# Load the dataset
-column_names = ['Sex', 'Length', 'Diameter', 'Height', 'Whole_weight', 'Shucked_weight', 'Viscera_weight', 'Shell_weight', 'Rings']
-df = pd.read_csv('abalone.csv', names=column_names)
-
-# Convert 'Sex' column to numerical values using one-hot encoding
-df = pd.get_dummies(df, columns=['Sex'], drop_first=True)
-
-# Convert boolean columns to integers
-df['Sex_I'] = df['Sex_I'].astype(int)
-df['Sex_M'] = df['Sex_M'].astype(int)
-
-# Adjust the target variable to get the actual age
-df['Age'] = df['Rings'] + 1.5
-df.drop(columns=['Rings'], inplace=True)
-
-# Separate features and target variable
-X = df.drop(columns=['Age'])  # Features
-y = df['Age']  # Target variable
-
-# Feature Scaling
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
-# Train-Test Split
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-
-# Initialize the linear regression model
-model = LinearRegression()
-
-# Train the model on the training data
-model.fit(X_train, y_train)
-
-# Make predictions on the test data
-y_pred = model.predict(X_test)
-
-# Evaluate the model
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-
-print("Mean Squared Error (MSE):", mse)
-print("R-squared (R2) Score:", r2)
-```
-# Result
-```
-Mean Squared Error (MSE): 4.8912
-R-squared (R2) Score: 0.5482
-```
-A lower MSE indicates better predictive accuracy, while a higher R-squared score indicates a better fit of the model to the data.
 
 
 
